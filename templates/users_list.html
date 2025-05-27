@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Find Users</title>
+    <style>
+        .error { color: red; }
+        .danger { color: red; }
+        .success { color: green; }
+        .info { color: blue; }
+        .warning { color: orange; }
+        ul.flashes { list-style-type: none; padding: 0; }
+        ul.flashes li { margin-bottom: 10px; padding: 10px; border: 1px solid #ddd; }
+        .error, .danger { border-left: 5px solid red; }
+        .success { border-left: 5px solid green; }
+        .info { border-left: 5px solid blue; }
+        .warning { border-left: 5px solid orange; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        button { padding: 5px 10px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Find Users</h1>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul class=flashes>
+        {% for category, message in messages %}
+          <li class="{{ category }}">{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    <table>
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.username }}</td>
+                <td>{{ user.status }}</td>
+                <td>
+                    {% if user.status == "Not Friends" %}
+                    <form method="POST" action="{{ url_for('send_friend_request', recipient_user_id=user.id) }}" style="display:inline;">
+                        <button type="submit">Send Friend Request</button>
+                    </form>
+                    {% elif user.status == "Request Sent" %}
+                        <span>Request Sent</span>
+                    {% elif user.status == "Request Received" %}
+                        <span>Request Received - Check <a href="{{ url_for('friend_requests') }}">Friend Requests</a></span>
+                        {# Optionally, add accept/decline buttons here too for direct action #}
+                        {#
+                        <form method="POST" action="{{ url_for('accept_friend_request_from_users_list', sender_user_id=user.id) }}" style="display:inline;">
+                             <button type="submit">Accept</button>
+                        </form>
+                        <form method="POST" action="{{ url_for('decline_friend_request_from_users_list', sender_user_id=user.id) }}" style="display:inline;">
+                             <button type="submit">Decline</button>
+                        </form>
+                        #}
+                    {% elif user.status == "Friends" %}
+                        <span>Friends</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="3">No other users found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p><a href="{{ url_for('dashboard') }}">Back to Dashboard</a></p>
+</body>
+</html>

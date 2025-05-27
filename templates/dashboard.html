@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+</head>
+<body>
+    <h1>Welcome, {{ username }}!</h1>
+    <p>This is your dashboard. You can use the links below to navigate the site.</p>
+    <p><a href="{{ url_for('main_feed') }}">Go to Main Feed</a></p>
+    <ul>
+        <li><a href="{{ url_for('profile') }}">View My Profile</a></li>
+        <li><a href="{{ url_for('users_list') }}">Find Users</a></li>
+        <li><a href="{{ url_for('friend_requests') }}">View Friend Requests</a></li>
+        <li><a href="{{ url_for('friends_list') }}">My Friends</a></li>
+        <li><a href="{{ url_for('create_post') }}">Create Post</a></li>
+        <li><a href="{{ url_for('my_posts') }}">My Posts</a></li>
+        <li><a href="{{ url_for('logout') }}">Logout</a></li>
+    </ul>
+</body>
+</html>

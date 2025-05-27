@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat with {{ friend_username }}</title>
+    <style> /* Basic styling for chat messages */
+        .message-container { margin-bottom: 10px; padding: 5px; border-radius: 5px; max-width: 75%; clear: both;}
+        .sent { background-color: #dcf8c6; text-align: left; margin-left: auto; float: right; } /* Aligned to right */
+        .received { background-color: #f1f0f0; text-align: left; margin-right: auto; float: left; } /* Aligned to left */
+        .message-content { font-size: 1em; word-wrap: break-word; }
+        .message-meta { font-size: 0.8em; color: #555; margin-top: 3px; }
+        ul.flashes { list-style-type: none; padding: 0; }
+        ul.flashes li { margin-bottom: 10px; padding: 10px; border: 1px solid #ddd; }
+        .error, .danger { border-left: 5px solid red; color: red; }
+        .success { border-left: 5px solid green; color: green; }
+        .info { border-left: 5px solid blue; color: blue; }
+        .warning { border-left: 5px solid orange; color: orange; }
+        #message-list-container { height: 300px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px; margin-bottom:10px; }
+        .clearfix::after { content: ""; clear: both; display: table; } /* To contain floats */
+    </style>
+</head>
+<body>
+    <h1>Chat with {{ friend_username }}</h1>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul class=flashes>
+        {% for category, message in messages %}
+          <li class="{{ category }}">{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    <div id="message-list-container">
+        {% if messages_list %}
+            {% for message in messages_list %}
+                <div class="message-container {% if message.sender_id == session['user_id'] %}sent{% else %}received{% endif %}">
+                    <p class="message-content">{{ message.content }}</p>
+                    <p class="message-meta"><small>
+                        {{ 'You' if message.sender_id == session['user_id'] else friend_username }}
+                        at {{ message.created_at if message.created_at else 'N/A' }}
+                    </small></p>
+                </div>
+                <div class="clearfix"></div> {# Clear floats after each message block #}
+            {% endfor %}
+        {% else %}
+            <p>No messages yet. Start the conversation!</p>
+        {% endif %}
+    </div>
+
+    <form method="POST" action="{{ url_for('send_message_to_user', receiver_user_id=friend_user_id) }}">
+        <div>
+            <textarea name="content" rows="3" cols="50" placeholder="Type your message..." required></textarea>
+        </div>
+        <br>
+        <div>
+            <input type="submit" value="Send Message">
+        </div>
+    </form>
+    <hr>
+    <p><a href="{{ url_for('friends_list') }}">Back to Friends List</a></p>
+    <p><a href="{{ url_for('main_feed') }}">Back to Main Feed</a></p>
+
+    <script>
+        // Scroll to the bottom of the message list on page load
+        var messageList = document.getElementById("message-list-container");
+        messageList.scrollTop = messageList.scrollHeight;
+    </script>
+</body>
+</html>
