@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Posts</title>
+    <style>
+        .error { color: red; }
+        .danger { color: red; }
+        .success { color: green; }
+        .info { color: blue; }
+        .warning { color: orange; }
+        ul.flashes { list-style-type: none; padding: 0; }
+        ul.flashes li { margin-bottom: 10px; padding: 10px; border: 1px solid #ddd; }
+        .error, .danger { border-left: 5px solid red; }
+        .success { border-left: 5px solid green; }
+        .info { border-left: 5px solid blue; }
+        .warning { border-left: 5px solid orange; }
+        .post { border: 1px solid #eee; padding: 10px; margin-bottom: 10px; }
+        .post small { color: #777; }
+    </style>
+</head>
+<body>
+    <h1>My Posts</h1>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul class=flashes>
+        {% for category, message in messages %}
+          <li class="{{ category }}">{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    <p><a href="{{ url_for('create_post') }}">Create a New Post</a></p>
+    <hr>
+
+    {% if posts %}
+        {% for post in posts %}
+            <div class="post">
+                <p>{{ post.content }}</p>
+                {# Displaying created_at as string directly from SQLite #}
+                <small>Posted on: {{ post.created_at if post.created_at else 'N/A' }}</small>
+            </div>
+            <hr>
+        {% endfor %}
+    {% else %}
+        <p>You haven't created any posts yet, or no posts were found.</p>
+    {% endif %}
+    <p><a href="{{ url_for('dashboard') }}">Back to Dashboard</a></p>
+</body>
+</html>

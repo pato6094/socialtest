@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ user.username }}'s Profile</title>
+    <style>
+        .error { color: red; }
+        .danger { color: red; }
+        .success { color: green; }
+        .info { color: blue; }
+        .warning { color: orange; }
+        ul.flashes { list-style-type: none; padding: 0; }
+        ul.flashes li { margin-bottom: 10px; padding: 10px; border: 1px solid #ddd; }
+        .error, .danger { border-left: 5px solid red; }
+        .success { border-left: 5px solid green; }
+        .info { border-left: 5px solid blue; }
+        .warning { border-left: 5px solid orange; }
+    </style>
+</head>
+<body>
+    <h1>User Profile</h1>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul class=flashes>
+        {% for category, message in messages %}
+          <li class="{{ category }}">{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    {% if user %}
+        <p><strong>Username:</strong> {{ user.username }}</p>
+        <p><strong>Email:</strong> {{ user.email }}</p>
+        <p><strong>Joined:</strong> {{ user.created_at }}</p>
+        {# Add more details here as they become available, e.g., registration date #}
+        <p><em>(More profile details will be available later.)</em></p>
+    {% else %}
+        <p>Could not load profile information.</p>
+    {% endif %}
+    
+    <p><a href="{{ url_for('dashboard') }}">Back to Dashboard</a></p>
+    <p><a href="{{ url_for('logout') }}">Logout</a></p>
+</body>
+</html>

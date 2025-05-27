@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+    <style>
+        .error { color: red; }
+        .success { color: green; }
+        ul.flashes { list-style-type: none; padding: 0; }
+        ul.flashes li { margin-bottom: 10px; padding: 10px; border: 1px solid #ddd; }
+        .error { border-left: 5px solid red; }
+        .success { border-left: 5px solid green; }
+    </style>
+</head>
+<body>
+    <h1>User Registration</h1>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul class=flashes>
+        {% for category, message in messages %}
+          <li class="{{ category }}">{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+    <form method="POST">
+        <label for="username">Username:</label><br>
+        <input type="text" id="username" name="username" value="{{ request.form.username }}" required><br><br>
+        
+        <label for="email">Email:</label><br>
+        <input type="email" id="email" name="email" value="{{ request.form.email }}" required><br><br>
+        
+        <label for="password">Password:</label><br>
+        <input type="password" id="password" name="password" required><br><br>
+        
+        <label for="confirm_password">Confirm Password:</label><br>
+        <input type="password" id="confirm_password" name="confirm_password" required><br><br>
+        
+        <input type="submit" value="Register">
+    </form>
+    <p>Already have an account? <a href="{{ url_for('login') }}">Login here</a></p> 
+</body>
+</html>

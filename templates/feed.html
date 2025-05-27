@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>News Feed</title>
+    <style>
+        .error { color: red; }
+        .danger { color: red; }
+        .success { color: green; }
+        .info { color: blue; }
+        .warning { color: orange; }
+        ul.flashes { list-style-type: none; padding: 0; }
+        ul.flashes li { margin-bottom: 10px; padding: 10px; border: 1px solid #ddd; }
+        .error, .danger { border-left: 5px solid red; }
+        .success { border-left: 5px solid green; }
+        .info { border-left: 5px solid blue; }
+        .warning { border-left: 5px solid orange; }
+        .post { border: 1px solid #eee; padding: 10px; margin-bottom: 10px; }
+        .post strong { font-weight: bold; }
+        .post small { color: #777; }
+    </style>
+</head>
+<body>
+    <h1>News Feed</h1>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul class=flashes>
+        {% for category, message in messages %}
+          <li class="{{ category }}">{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    <p><a href="{{ url_for('create_post') }}">Create a New Post</a></p>
+    <hr>
+
+    {% if posts %}
+        {% for post in posts %}
+            <div class="post">
+                <p><strong>Author:</strong> {{ post.author_username }}</p>
+                <p>{{ post.content }}</p>
+                <small>Posted on: {{ post.created_at if post.created_at else 'N/A' }}</small>
+            </div>
+            <hr>
+        {% else %}
+            <p>Your feed is empty. Find some friends or create a new post!</p>
+        {% endfor %}
+    {% else %}
+        <p>No posts to display in your feed, or an error occurred.</p>
+    {% endif %}
+    
+    <p><a href="{{ url_for('dashboard') }}">Go to Dashboard</a></p>
+</body>
+</html>

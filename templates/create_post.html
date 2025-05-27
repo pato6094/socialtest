@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create New Post</title>
+    <style>
+        .error { color: red; }
+        .danger { color: red; }
+        .success { color: green; }
+        .info { color: blue; }
+        .warning { color: orange; }
+        ul.flashes { list-style-type: none; padding: 0; }
+        ul.flashes li { margin-bottom: 10px; padding: 10px; border: 1px solid #ddd; }
+        .error, .danger { border-left: 5px solid red; }
+        .success { border-left: 5px solid green; }
+        .info { border-left: 5px solid blue; }
+        .warning { border-left: 5px solid orange; }
+    </style>
+</head>
+<body>
+    <h1>Create a New Post</h1>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul class=flashes>
+        {% for category, message in messages %}
+          <li class="{{ category }}">{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+    <form method="POST">
+        <div>
+            <label for="content">Your Post:</label><br>
+            <textarea id="content" name="content" rows="5" cols="50" required></textarea>
+        </div>
+        <br>
+        <div>
+            <input type="submit" value="Create Post">
+        </div>
+    </form>
+    <p><a href="{{ url_for('dashboard') }}">Back to Dashboard</a></p>
+</body>
+</html>
